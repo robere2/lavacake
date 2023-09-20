@@ -1,4 +1,4 @@
-import config from './config.json' assert { type: 'json' }
+import config from './runtime/config.json' assert { type: 'json' };
 
 import { Endpoint } from './src/types/endpoint'
 import { endpoints } from './src/routes'

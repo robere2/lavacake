@@ -1,6 +1,4 @@
-// @ts-nocheck
 import tokensJSON from '../../token.json'
-
 const tokens = tokensJSON as {
     active: 'devToken' | 'appToken'
     devToken: string
