@@ -1,13 +1,14 @@
-import config from './runtime/config.json' assert { type: 'json' };
-
 import { Endpoint } from './src/types/endpoint'
 import { endpoints } from './src/routes'
+import { Config } from './src/utils/Config.ts'
 
 export default function Res(obj: object) {
     return new Response(JSON.stringify(obj))
 }
 
 const rateLimits: Record<string, number> = {} // Track User Ratelimits
+
+const config = await Config.load()
 
 // Currently unused while I'm researching how the ratelimits work
 const rateHypixel = { lastPeriod: Date.now(), requests: 0 } // Track Hypixel API Ratelimits
@@ -16,11 +17,11 @@ Bun.serve({
     fetch(req) {
         // Check if ratelimited
         const consumerIP = req.headers.get('x-forwarded-for') || '0.0.0.0' // Fallback to prevnet TS annotation freakout
-        if (config.userRatelimit.enabled) {
+        if (config.rateLimitEnabled) {
             if (!consumerIP) {
                 throw new Error('x-forwarded-for header is required but not provided. Disable userRatelimit in config.json to solve this.')
             }
-            if (rateLimits[consumerIP] >= config.userRatelimit.reqAmount) return Res({ success: false, code: 429, error: 'You are being ratelimited' })
+            if (rateLimits[consumerIP] >= config.rateLimitCap) return Res({ success: false, code: 429, error: 'You are being ratelimited' })
         }
 
         // Format data
@@ -33,12 +34,12 @@ Bun.serve({
         if (EndpointData.oneOf?.length && !EndpointData.oneOf.some((key) => reqUrl.searchParams.has(key))) return Res({ success: false, code: 400, error: 'Specify one of these parameters', oneOf: EndpointData.oneOf })
 
         // Manage ratelimit addition
-        if (config.userRatelimit.enabled) {
+        if (config.rateLimitEnabled) {
             if (!rateLimits[consumerIP]) rateLimits[consumerIP] = 0
             rateLimits[consumerIP]++
             setTimeout(() => {
                 rateLimits[consumerIP] -= 1
-            }, config.userRatelimit.expires * 1000)
+            }, config.rateLimitExpires * 1000)
         }
 
         // Run endpoint code
