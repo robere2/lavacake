@@ -1,18 +1,28 @@
-import { Endpoint } from './src/types/endpoint'
-import { endpoints } from './src/routes'
-import { Config } from './src/utils/Config.ts'
-
-export default function Res(obj: object) {
-    return new Response(JSON.stringify(obj))
-}
+import { Endpoint } from './types/endpoint.ts'
+import { endpoints } from './routes'
+import { Config } from './utils/Config.ts'
+import { Res } from './utils/util.ts'
 
 const rateLimits: Record<string, number> = {} // Track User Ratelimits
 
 const config = await Config.load()
 
-// Currently unused while I'm researching how the ratelimits work
+// TLS enables HTTPS and can be configured in the config
+let tlsSettings = undefined
+if (config.tlsEnabled) {
+    if (!config.tlsCertPath || !config.tlsKeyPath) {
+        throw new Error('When TLS is enabled, both a certificate path and private key path need to be provided in ' + 'the config.')
+    }
+    tlsSettings = {
+        cert: Bun.file(config.tlsCertPath),
+        key: Bun.file(config.tlsKeyPath),
+        passphrase: config.tlsPassphrase,
+    }
+}
+
 Bun.serve({
-    port: 9753,
+    port: config.port,
+    tls: tlsSettings,
     fetch(req) {
         // Check if ratelimited
         const consumerIP = req.headers.get('x-forwarded-for') || '0.0.0.0' // Fallback to prevnet TS annotation freakout
@@ -45,3 +55,6 @@ Bun.serve({
         return EndpointData.run(req, reqUrl.searchParams)
     },
 })
+
+const url = `${config.tlsEnabled ? 'https://' : 'http://'}${config.hostname}:${config.port}/`
+console.log(`🚀 Lavacake server running at ${url}`)

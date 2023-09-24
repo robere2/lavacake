@@ -1,6 +1,6 @@
 {
     "name": "lavacake",
-    "module": "index.ts",
+    "module": "src/index.ts",
     "version": "alpha-1",
     "license":"Apache-2.0",
     "prettier":{
@@ -19,8 +19,8 @@
         "typescript": "^5.0.0"
     },
     "scripts": {
-        "dev": "nodemon -L --exec \"tsc && bun --inspect=9229\" index.ts",
-        "start": "bun index.ts",
+        "dev": "nodemon -L --exec \"tsc && bun --inspect=9229 src/index.ts\"",
+        "start": "bun src/index.ts",
         "workflows": "act",
         "pretty": "bunx prettier . --write"
     }

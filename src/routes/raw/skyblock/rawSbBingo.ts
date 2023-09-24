@@ -1,5 +1,5 @@
 import hypixelApi from '../../../utils/hypixelApi'
-import Res from '../../../../index'
+import { Res } from '../../../utils/util.ts'
 
 // cacheless
 export default {

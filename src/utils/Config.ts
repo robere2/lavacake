@@ -1,11 +1,18 @@
 export class Config {
+    protected _hostname: string
     protected _port: number
+    protected _tlsEnabled: boolean
+    protected _tlsCertPath?: string
+    protected _tlsKeyPath?: string
+    protected _tlsPassphrase?: string
     protected _rateLimitEnabled: boolean
     protected _rateLimitExpires: number
     protected _rateLimitCap: number
 
     constructor() {
+        this._hostname = 'localhost'
         this._port = 9753
+        this._tlsEnabled = false
         this._rateLimitEnabled = false
         this._rateLimitExpires = 10
         this._rateLimitCap = 10
@@ -42,10 +49,15 @@ export class Config {
         const json = await Bun.file(path).json()
 
         const config = new Config()
-        config._port = json.port
-        config._rateLimitEnabled = json.rateLimitEnabled
-        config._rateLimitExpires = json.rateLimitExpires
-        config._rateLimitCap = json.rateLimitCap
+        config._hostname = json.hostname ?? config._hostname
+        config._port = json.port ?? config._port
+        config._tlsEnabled = json.tlsEnabled ?? config._tlsEnabled
+        config._tlsCertPath = json.tlsCertPath ?? config._tlsCertPath
+        config._tlsKeyPath = json.tlsKeyPath ?? config._tlsKeyPath
+        config._tlsPassphrase = json.tlsPassphrase ?? config._tlsPassphrase
+        config._rateLimitEnabled = json.rateLimitEnabled ?? config._rateLimitEnabled
+        config._rateLimitExpires = json.rateLimitExpires ?? config._rateLimitExpires
+        config._rateLimitCap = json.rateLimitCap ?? config._rateLimitCap
 
         return config
     }
@@ -58,10 +70,15 @@ export class Config {
      */
     public static async loadEnvironmentVariables(): Promise<Config> {
         const config = new Config()
-        config._port = Number(process.env.PORT) || 9753
-        config._rateLimitEnabled = process.env.RATE_LIMIT_ENABLED == 'true'
-        config._rateLimitExpires = Number(process.env.RATE_LIMIT_EXPIRES) || 10
-        config._rateLimitCap = Number(process.env.RATE_LIMIT_CAP) || 10
+        config._hostname = process.env.HOSTNAME ?? config._hostname
+        config._port = process.env.PORT ? Number(process.env.PORT) : config._port
+        config._tlsEnabled = process.env.TLS_ENABLED ? process.env.TLS_ENABLED === 'true' : config._tlsEnabled
+        config._tlsCertPath = process.env.TLS_CERT_PATH ? process.env.TLS_CERT_PATH : config._tlsCertPath
+        config._tlsKeyPath = process.env.TLS_KEY_PATH ? process.env.TLS_KEY_PATH : config._tlsKeyPath
+        config._tlsPassphrase = process.env.TLS_PASSPHRASE ? process.env.TLS_PASSPHRASE : config._tlsPassphrase
+        config._rateLimitEnabled = process.env.RATE_LIMIT_ENABLED ? process.env.RATE_LIMIT_ENABLED === 'true' : config._rateLimitEnabled
+        config._rateLimitExpires = process.env.RATE_LIMIT_EXPIRES ? Number(process.env.RATE_LIMIT_EXPIRES) : config._rateLimitExpires
+        config._rateLimitCap = process.env.RATE_LIMIT_CAP ? Number(process.env.RATE_LIMIT_CAP) : config._rateLimitCap
 
         return config
     }
@@ -90,8 +107,28 @@ export class Config {
         await Bun.write(path, JSON.stringify(newObject))
     }
 
+    public get hostname(): string {
+        return this._hostname
+    }
+
     public get port(): number {
         return this._port
+    }
+
+    public get tlsEnabled(): boolean {
+        return this._tlsEnabled
+    }
+
+    public get tlsCertPath(): string | undefined {
+        return this._tlsCertPath
+    }
+
+    public get tlsKeyPath(): string | undefined {
+        return this._tlsKeyPath
+    }
+
+    public get tlsPassphrase(): string | undefined {
+        return this._tlsPassphrase
     }
 
     public get rateLimitEnabled(): boolean {

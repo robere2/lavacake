@@ -1,5 +1,5 @@
 import { Endpoint } from '../types/endpoint.ts'
-import Res from '../../index'
+
 import packageInfo from '../../package.json' assert { type: 'json' }
 
 import player from './wrapped/player.ts'
@@ -26,6 +26,7 @@ import rawSbBingo from './raw/skyblock/rawSbBingo.ts'
 import rawSbElections from './raw/skyblock/rawSbElections.ts'
 import rawSbNews from './raw/skyblock/rawSbNews.ts'
 import rawSbFireSales from './raw/skyblock/rawSbFireSales.ts'
+import { Res } from '../utils/util.ts'
 
 export const endpoints: Record<string, Endpoint> = {
     root: {

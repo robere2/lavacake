@@ -1,10 +1,10 @@
 import hypixelApi from '../../utils/hypixelApi'
 import Cache from '../../utils/Cache'
-import Res from '../../../index'
 
 import parseRank, { Ranks } from '../../utils/parsers/parseRank'
 import parseHousing from '../../utils/parsers/parseHousing'
 import nwLevel from '../../utils/calc/nwLevel'
+import { Res } from '../../utils/util.ts'
 
 export default {
     path: '/player',

@@ -1,5 +1,9 @@
 import Cache from './Cache'
 
+export function Res(obj: object) {
+    return new Response(JSON.stringify(obj))
+}
+
 /**
  * Checks cache + Queries Mojang API for uuid
  * @param playerName Player name
