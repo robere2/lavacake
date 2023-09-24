@@ -1,6 +1,6 @@
-// @ts-nocheck
 import { Endpoint } from '../types/endpoint.ts'
-import root from './.ts'
+import Res from '../../index'
+import packageInfo from '../../package.json' assert { type: 'json' }
 
 import player from './wrapped/player.ts'
 
@@ -16,7 +16,7 @@ import rawLeaderboards from './raw/other/rawLeaderboards.ts'
 
 import rawAchievements from './raw/resources/rawAchievements.ts'
 import rawChallenges from './raw/resources/rawChallenges.ts'
-import rawCompanions from './raw/resources/rawVanityCompanions.ts'
+import rawVanityCompanions from './raw/resources/rawVanityCompanions.ts'
 import rawGameInfo from './raw/resources/rawGameInfo.ts'
 import rawQuests from './raw/resources/rawQuests.ts'
 import rawVanityPets from './raw/resources/rawVanityPets.ts'
@@ -28,7 +28,17 @@ import rawSbNews from './raw/skyblock/rawSbNews.ts'
 import rawSbFireSales from './raw/skyblock/rawSbFireSales.ts'
 
 export const endpoints: Record<string, Endpoint> = {
-    root,
+    root: {
+        path: '/',
+        params: [],
+        run() {
+            return Res({
+                version: packageInfo.version,
+                code: 200,
+                message: '🍰 Lavacake is baked & running!',
+            })
+        },
+    },
 
     // Wrapped data
     player,

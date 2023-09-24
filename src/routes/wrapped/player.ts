@@ -15,7 +15,7 @@ export default {
             throw new Error('Name is required but not provided')
         }
         let HypixelData = Cache[lowerCaseName]
-        let previouslyCached = HypixelData ? true : false
+        let previouslyCached = !!HypixelData
 
         if (!previouslyCached) {
             await hypixelApi.get(`/player?name=${lowerCaseName}`).then((promise) =>

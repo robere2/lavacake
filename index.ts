@@ -11,7 +11,6 @@ const rateLimits: Record<string, number> = {} // Track User Ratelimits
 const config = await Config.load()
 
 // Currently unused while I'm researching how the ratelimits work
-const rateHypixel = { lastPeriod: Date.now(), requests: 0 } // Track Hypixel API Ratelimits
 Bun.serve({
     port: 9753,
     fetch(req) {
