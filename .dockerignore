@@ -176,3 +176,6 @@ dist
 README.md
 config.json
 *.pem
+
+# Compiled TypeScript files
+src/**/*.js

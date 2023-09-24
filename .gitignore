@@ -173,3 +173,6 @@ dist
 # Runtime files
 config.json
 *.pem
+
+# Compiled TypeScript files
+src/**/*.js
