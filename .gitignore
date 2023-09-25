@@ -176,3 +176,6 @@ config.json
 
 # Compiled TypeScript files
 src/**/*.js
+
+# User-defined Docker Compose file
+docker-compose.yml

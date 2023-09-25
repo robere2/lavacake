@@ -170,12 +170,13 @@ dist
 # Jetbrains files
 .idea
 
-# Unnecessary project files
+# Unnecessary project files/runtime files
 .gitattributes
 .gitignore
 README.md
 config.json
 *.pem
+docker-compose*.yml
 
 # Compiled TypeScript files
 src/**/*.js

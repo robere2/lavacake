@@ -1,9 +1,0 @@
-version: '3.9'
-services:
-  lavacake:
-    build: .
-    restart: unless-stopped
-    volumes:
-      - ./runtime:/usr/src/app/runtime
-    ports:
-      - "9753:9753"
